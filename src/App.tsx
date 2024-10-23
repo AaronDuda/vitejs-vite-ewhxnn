@@ -1,14 +1,14 @@
 import './App.css';
-import DeleteTaskButton from './components/deleteTaskButton.tsx';
+import DeleteButton from './components/buttons/deleteButton.tsx';
 import TaskTable from './components/taskTable.tsx';
-import UpdateTaskButton from './components/updateTaskButton.tsx';
+import UpdateButton from './components/buttons/updateButton.tsx';
 
 function App() {
   return (
     <>
       <TaskTable />
-      <DeleteTaskButton />
-      <UpdateTaskButton />
+      <DeleteButton />
+      <UpdateButton />
     </>
   );
 }
