@@ -1,10 +1,14 @@
-import * as React from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { CircleButton } from './circleButton';
 
-export default function DeleteButton() {
+export interface DeleteButtonProps {
+  title: string
+  onClick: (title: string) => void;
+};
+
+export default function DeleteButton(props: DeleteButtonProps) {
   return (
-    <CircleButton color="error" variant="contained">
+    <CircleButton onClick={() => props.onClick(props.title)} color="error" variant="contained">
       <DeleteIcon />
       Delete
     </CircleButton>

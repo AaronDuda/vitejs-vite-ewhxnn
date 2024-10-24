@@ -7,32 +7,49 @@ import DialogContent from '@mui/material/DialogContent/DialogContent';
 import DeadlinePicker from './deadlinePicker';
 import PrioritySelector from './prioritySelector';
 import DialogButtons from '../buttons/dialogButtons';
-import * as toastr from "toastr";
 import dayjs from 'dayjs';
+import { Task } from '../task';
 
 
 export interface EditDialogProps {
   open: boolean;
-  selectedValue: string;
-  onClose: (value: string) => void;
+  title: string;
+  onClose: () => void;
+  update: (task: Task) => void;
+  toastrError: (message: string, title: string) => void;
+  toastrSuccess: (message: string, title: string) => void;
 }
 
 export function UpdateDialog(props: EditDialogProps) {
-  const { onClose, selectedValue, open } = props;
-  const [deadline, setDeadline] = React.useState<dayjs.Dayjs | null>(dayjs());
+  const [description, setDescription] = React.useState<string>('');
+  const [deadline, setDeadline] = React.useState<dayjs.Dayjs>(dayjs());
   const [priority, setPriority] = React.useState<string>('low');
   const theme = useTheme();
 
   const handleClose = () => {
-    onClose(selectedValue);
+    props.onClose();
+  };
+
+  const handleDeadlineChange = (deadline: dayjs.Dayjs | null) => {
+    if (deadline) setDeadline(deadline)
   };
 
   const handleSubmit = () => {
-    onClose(selectedValue);
+    props.onClose();
+    const newTask: Task = {
+      title: props.title.toString(),
+      description: description,
+      deadline: deadline.toDate().toLocaleDateString(),
+      priority: priority,
+      isComplete: false,
+    };
+
+    props.update(newTask);
+    props.toastrSuccess(`successfully updated ${props.title}`, "Update Success");
   };
 
   return (
-    <Dialog onClose={handleClose} open={open}>
+    <Dialog onClose={handleClose} open={props.open}>
       <DialogTitle
         sx={{
           backgroundColor: theme.palette.primary.main,
@@ -51,10 +68,10 @@ export function UpdateDialog(props: EditDialogProps) {
             mt: 2,
           }}
         >
-          <TextField id="Description" label="Description" variant="outlined" />
-          <DeadlinePicker onChange={(deadline) => setDeadline(deadline)} />
+          <TextField value={description} onChange={(e) => setDescription(e.target.value)}id="Description" label="Description" variant="outlined" />
+          <DeadlinePicker onChange={handleDeadlineChange} />
           <PrioritySelector onChange={(e) => setPriority(e.target.value)} />
-          <DialogButtons onSubmit={handleSubmit} onCancel={handleClose} />
+          <DialogButtons onSubmit={handleSubmit} onCancel={handleClose} submitButtonContent={<><EditIcon /> Edit</>} />
         </Box>
       </DialogContent>
     </Dialog>

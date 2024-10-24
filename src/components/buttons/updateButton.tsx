@@ -1,25 +1,20 @@
-import * as React from 'react';
 import EditIcon from '@mui/icons-material/Edit';
-import { UpdateDialog } from '../dialog/updateDialog';
 import { CircleButton } from './circleButton';
 
+export interface UpdateButtonProps {
+  title: string,
+  openUpdateDialog: (title: string) => void
+}
 
-export default function UpdateButton() {
-  const [open, setOpen] = React.useState(false);
+export default function UpdateButton(props: UpdateButtonProps) {
 
-  const handleClose = () => {
-    setOpen(false);
-    toastr.success("Updated");
-  };
+  const handleClick = () => {
+    props.openUpdateDialog(props.title);
+  }
   return <>
-      <CircleButton onClick={() => setOpen(true)} variant="contained">
+      <CircleButton onClick={handleClick} variant="contained">
         <EditIcon />
         Update
       </CircleButton>
-      <UpdateDialog
-        open={open}
-        selectedValue={''}
-        onClose={handleClose}
-      ></UpdateDialog>
     </>
 }

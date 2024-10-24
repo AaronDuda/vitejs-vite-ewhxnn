@@ -1,5 +1,5 @@
 import * as React from 'react';
-import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
 import Dialog from '@mui/material/Dialog';
 import { Box, DialogTitle, TextField } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -8,43 +8,57 @@ import DeadlinePicker from './deadlinePicker';
 import PrioritySelector from './prioritySelector';
 import DialogButtons from '../buttons/dialogButtons';
 import dayjs from 'dayjs';
-import * as toastr from "toastr";
+import { Task } from '../task';
 
 
-export interface EditDialogProps {
+export interface AddDialogProps {
   open: boolean;
-  selectedValue: string;
-  titles: Map<string, boolean>;
-  onClose: (value: string) => void;
+  tasks: Map<string, Task>;
+  add: (task: Task) => void;
+  onClose: () => void;
+  toastrError: (message: string, title: string) => void;
+  toastrSuccess: (message: string, title: string) => void;
 }
 
-export function AddDialog(props: EditDialogProps) {
-  const title = React.useRef<string>('');
-  const description = React.useRef<string>('');
-  const [deadline, setDeadline] = React.useState<dayjs.Dayjs | null>(dayjs());
+export function AddDialog(props: AddDialogProps) {
+  const [title, setTitle] = React.useState<string>('');
+  const [description, setDescription] = React.useState<string>('');
+  const [deadline, setDeadline] = React.useState<dayjs.Dayjs>(dayjs());
   const [priority, setPriority] = React.useState<string>('low');
   const theme = useTheme();
   let invalidTitle = false;
 
   const handleClose = () => {
-    props.onClose('selectedValue');
-    toastr.success("Successfully closed dialog", "Success!");
+    props.onClose();
+    props.toastrSuccess("Successfully closed dialog", "Success!");
+  };
+
+  const handleDeadlineChange = (deadline: dayjs.Dayjs | null) => {
+    if (deadline) setDeadline(deadline)
   };
 
   const handleSubmit = () => {
     if (invalidTitle) {
-        toastr.error("Title already exists");
-    } else if (!title.current) {
+        props.toastrError("Title already exists", "Oh no!");
+    } else if (!title) {
         invalidTitle = true;
-        toastr.error("Title is required");
+        props.toastrError("Title is required", "Oh no!");
     } else {
-        toastr.success("Submitting");
-        props.onClose('');
+        const newTask: Task = {
+            title: title,
+            description: description,
+            deadline: deadline.toDate().toLocaleDateString(),
+            priority: priority,
+            isComplete: false,
+          };
+      
+          props.add(newTask);
     }
   }
 
   const validateInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (props.titles.has(e.target.value)) {
+    setTitle(e.target.value);
+    if (props.tasks.has(e.target.value)) {
         invalidTitle = true;
     } else {
         invalidTitle = false;
@@ -59,7 +73,7 @@ export function AddDialog(props: EditDialogProps) {
           color: theme.palette.common.white,
         }}
       >
-        <EditIcon /> Add Task
+        <AddIcon /> Add Task
       </DialogTitle>
       <DialogContent>
         <Box
@@ -71,11 +85,11 @@ export function AddDialog(props: EditDialogProps) {
             mt: 2,
           }}
         >
-          <TextField error={invalidTitle} onChange={validateInput} inputRef={title} label="Title" variant="outlined" />
-          <TextField inputRef={description} label="Description" variant="outlined" />
-          <DeadlinePicker onChange={(deadline) => setDeadline(deadline)} />
+          <TextField error={invalidTitle} onChange={validateInput} value={title} label="Title" variant="outlined" />
+          <TextField value={description} onChange={(e) => setDescription(e.target.value)} label="Description" variant="outlined" />
+          <DeadlinePicker onChange={handleDeadlineChange} />
           <PrioritySelector onChange={(e) => setPriority(e.target.value)} />
-          <DialogButtons onSubmit={handleSubmit} onCancel={handleClose} />
+          <DialogButtons onSubmit={handleSubmit} onCancel={handleClose} submitButtonContent={<><AddIcon /> Add</>} />
         </Box>
       </DialogContent>
     </Dialog>

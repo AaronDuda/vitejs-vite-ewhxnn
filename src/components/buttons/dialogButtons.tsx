@@ -1,11 +1,12 @@
-import EditIcon from '@mui/icons-material/Edit';
 import { Box, Button } from '@mui/material';
 import Grid from '@mui/material/Grid2'
 import CloseIcon from '@mui/icons-material/Close';
+import React from 'react';
 
 export interface DialogButtonsProps {
-    onSubmit: () => void;
-    onCancel: () => void;
+    submitButtonContent: React.JSX.Element,
+    onSubmit: () => void,
+    onCancel: () => void
 }
 
 export default function DialogButtons(props: DialogButtonsProps) {
@@ -14,8 +15,7 @@ export default function DialogButtons(props: DialogButtonsProps) {
             <Grid container spacing={2}>
               <Grid display="flex" justifyContent="center" alignItems="center" size="grow">
                 <Button onClick={props.onSubmit} variant="contained">
-                  <EditIcon />
-                  Edit
+                  {props.submitButtonContent}
                 </Button>
               </Grid>
               <Grid display="flex" justifyContent="center" alignItems="center" size="grow">

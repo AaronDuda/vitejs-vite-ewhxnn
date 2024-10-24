@@ -1,34 +1,18 @@
-import * as React from 'react';
 import AddIcon from '@mui/icons-material/Add';
-import { AddDialog } from '../dialog/addDialog';
 import { CircleButton } from './circleButton';
 
 
-export default function AddButton() {
-  const [open, setOpen] = React.useState(false);
-  const openDialog = () => {
-    setOpen(true);
-  };
+export interface AddButtonProps {
+  onClick: () => void;
+}
 
-  const closeDialog = () => {
-    setOpen(false);
-  };
-
-  const testMap = new Map<string, boolean>();
-  testMap.set("test", true);
-
+export default function AddButton(props: AddButtonProps) {
   return (
     <>
-      <CircleButton onClick={openDialog} variant="contained">
+      <CircleButton onClick={props.onClick} variant="contained">
         <AddIcon />
         Add
       </CircleButton>
-      <AddDialog
-        open={open}
-        selectedValue={''}
-        onClose={closeDialog} 
-        titles={testMap}>
-      </AddDialog>
     </>
   );
 }
