@@ -15,16 +15,16 @@ export default function TaskCells(props: TaskCellsProps) {
       const sorted: [string, Task][] = Array.from(props.tasks.entries())
         .sort(([keyA], [keyB]) => keyA.localeCompare(keyB));
       setSortedTasks(sorted);
-      console.log("attempted cells  te");
     }, [props.tasks]);
   
     return (
       sortedTasks.map(([title, task]) => (
         <TaskCell 
-            title={title} 
-            task={task} 
-            openUpdateDialog={props.openUpdateDialog} 
-            onDelete={props.onDelete} />
+              key={title}
+              title={title}
+              task={task}
+              openUpdateDialog={props.openUpdateDialog}
+              onDelete={props.onDelete} />
       ))
     );
   };

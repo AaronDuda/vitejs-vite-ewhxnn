@@ -23,26 +23,26 @@ export interface AddDialogProps {
 export function AddDialog(props: AddDialogProps) {
   const [title, setTitle] = React.useState<string>('');
   const [description, setDescription] = React.useState<string>('');
-  const [deadline, setDeadline] = React.useState<dayjs.Dayjs>(dayjs());
+  const [deadline, setDeadline] = React.useState<dayjs.Dayjs | null>(null);
   const [priority, setPriority] = React.useState<string>('low');
   const theme = useTheme();
-  let invalidTitle = false;
-
+  const [invalidTitle, setInvalidTitle] = React.useState<boolean>(false);
   const handleClose = () => {
     props.onClose();
     props.toastrSuccess("Successfully closed dialog", "Success!");
   };
 
-  const handleDeadlineChange = (deadline: dayjs.Dayjs | null) => {
-    if (deadline) setDeadline(deadline)
+  const handleDeadlineChange = (newDeadline: dayjs.Dayjs | null) => {
+    setDeadline(newDeadline)
   };
 
   const handleSubmit = () => {
-    if (invalidTitle) {
-        props.toastrError("Title already exists", "Oh no!");
-    } else if (!title) {
-        invalidTitle = true;
+    if (!title) {
         props.toastrError("Title is required", "Oh no!");
+    } else if (!validateInput(title)) {
+        props.toastrError("Title already exists", "Oh no!");
+    } else if (!deadline) {
+        props.toastrError("Deadline is required", "Oh no!");
     } else {
         const newTask: Task = {
             title: title,
@@ -56,14 +56,22 @@ export function AddDialog(props: AddDialogProps) {
     }
   }
 
-  const validateInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
-    if (props.tasks.has(e.target.value)) {
-        invalidTitle = true;
+  const validateInput = (newTitle: string) => {
+    setTitle(newTitle);
+    if (props.tasks.has(newTitle) || !newTitle) {
+        setInvalidTitle(true);
+        return false;
     } else {
-        invalidTitle = false;
+        setInvalidTitle(false);
+        return true;
     }
-  } 
+  }
+
+  const setHelperText = () => {
+    return !title ? "Title is required" : 
+    invalidTitle ? "Title already exists" : "";
+  }
+
 
   return (
     <Dialog onClose={handleClose} open={props.open}>
@@ -85,7 +93,13 @@ export function AddDialog(props: AddDialogProps) {
             mt: 2,
           }}
         >
-          <TextField error={invalidTitle} onChange={validateInput} value={title} label="Title" variant="outlined" />
+          <TextField 
+            error={invalidTitle || !title} 
+            onChange={(e) => validateInput(e.target.value)} 
+            value={title} 
+            label="Title" 
+            variant="outlined"
+            helperText={setHelperText()} />
           <TextField value={description} onChange={(e) => setDescription(e.target.value)} label="Description" variant="outlined" />
           <DeadlinePicker onChange={handleDeadlineChange} />
           <PrioritySelector onChange={(e) => setPriority(e.target.value)} />

@@ -47,7 +47,6 @@ export default function TaskTable(props: TaskTableProps) {
 
   React.useEffect(() => {
     setCurrentTasks(props.tasks);
-    console.log("table saw change");
   }, [props.tasks]);
 
   return (

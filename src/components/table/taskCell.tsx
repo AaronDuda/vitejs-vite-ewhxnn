@@ -5,6 +5,7 @@ import React from 'react';
 import TaskButtons from '../buttons/taskButtons';
 
 export interface TaskCellProps {
+    key: string,
     title: string,
     task: Task,
     openUpdateDialog: (title: string) => void

@@ -22,7 +22,7 @@ export interface EditDialogProps {
 
 export function UpdateDialog(props: EditDialogProps) {
   const [description, setDescription] = React.useState<string>('');
-  const [deadline, setDeadline] = React.useState<dayjs.Dayjs>(dayjs());
+  const [deadline, setDeadline] = React.useState<dayjs.Dayjs | null>(null);
   const [priority, setPriority] = React.useState<string>('low');
   const theme = useTheme();
 
@@ -31,21 +31,27 @@ export function UpdateDialog(props: EditDialogProps) {
   };
 
   const handleDeadlineChange = (deadline: dayjs.Dayjs | null) => {
-    if (deadline) setDeadline(deadline)
+    setDeadline(deadline)
   };
 
   const handleSubmit = () => {
-    props.onClose();
-    const newTask: Task = {
-      title: props.title.toString(),
-      description: description,
-      deadline: deadline.toDate().toLocaleDateString(),
-      priority: priority,
-      isComplete: false,
-    };
+    if (!deadline) {
+      props.toastrError("Deadline is required", "Oh no!");
+    } else {
+      const newTask: Task = {
+        title: props.title.toString(),
+        description: description,
+        deadline: deadline.toDate().toLocaleDateString(),
+        priority: priority,
+        isComplete: false,
+      };
 
-    props.update(newTask);
-    props.toastrSuccess(`successfully updated ${props.title}`, "Update Success");
+      props.update(newTask);
+      props.onClose();
+      props.toastrSuccess(`successfully updated ${props.title}`, "Update Success");
+    }
+
+    
   };
 
   return (

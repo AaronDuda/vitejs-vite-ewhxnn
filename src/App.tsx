@@ -1,6 +1,8 @@
 import './App.css';
+import 'toastr/build/toastr.min.css';
 import TaskTable from './components/table/taskTable.tsx';
 import { Task } from './components/task.ts';
+import toastr from 'toastr';
 import { AddDialog } from './components/dialog/addDialog.tsx';
 import { UpdateDialog } from './components/dialog/updateDialog.tsx';
 import React from 'react';
@@ -12,12 +14,11 @@ function App() {
   const [tasks, setTasks]= React.useState<Map<string, Task>>(new Map<string, Task>());
 
   const newTableUpdate = (task: Task) => {
-    const updatedTasks = new Map(tasks);  // Create a new Map instance
-    updatedTasks.set(task.title, task);   // Update the new Map
-    setTasks(updatedTasks);               // Set the new Map to state
+    const updatedTasks = new Map(tasks);
+    updatedTasks.set(task.title, task);
+    setTasks(updatedTasks);
     setAddOpen(false);
     setUpdateOpen(false);
-    console.log(updatedTasks);            // Optional: check updated tasks
   };
 
   const deleteTask = (title: string) => {
@@ -59,9 +60,11 @@ function App() {
         toastrSuccess={(message: string, title: string) => toastr.success(message, title)} />
       <UpdateDialog
         open={updateOpen}
-        onClose={closeUpdateDialog} 
-        title={updateTaskTitle} 
-        update={newTableUpdate} />
+        onClose={closeUpdateDialog}
+        title={updateTaskTitle}
+        update={newTableUpdate} 
+        toastrError={(message: string, title: string) => toastr.error(message, title)} 
+        toastrSuccess={(message: string, title: string) => toastr.success(message, title)} />
     </>
   );
 }
