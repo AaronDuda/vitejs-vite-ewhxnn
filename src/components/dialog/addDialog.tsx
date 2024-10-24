@@ -10,7 +10,6 @@ import DialogButtons from '../buttons/dialogButtons';
 import dayjs from 'dayjs';
 import { Task } from '../task';
 
-
 export interface AddDialogProps {
   open: boolean;
   tasks: Map<string, Task>;
@@ -24,12 +23,11 @@ export function AddDialog(props: AddDialogProps) {
   const [title, setTitle] = React.useState<string>('');
   const [description, setDescription] = React.useState<string>('');
   const [deadline, setDeadline] = React.useState<dayjs.Dayjs | null>(null);
-  const [priority, setPriority] = React.useState<string>('low');
+  const [priority, setPriority] = React.useState<string | null>(null);
   const theme = useTheme();
   const [invalidTitle, setInvalidTitle] = React.useState<boolean>(false);
   const handleClose = () => {
     props.onClose();
-    props.toastrSuccess("Successfully closed dialog", "Success!");
   };
 
   const handleDeadlineChange = (newDeadline: dayjs.Dayjs | null) => {
@@ -37,13 +35,27 @@ export function AddDialog(props: AddDialogProps) {
   };
 
   const handleSubmit = () => {
+    let error = false;
     if (!title) {
-        props.toastrError("Title is required", "Oh no!");
-    } else if (!validateInput(title)) {
-        props.toastrError("Title already exists", "Oh no!");
-    } else if (!deadline) {
-        props.toastrError("Deadline is required", "Oh no!");
-    } else {
+        props.toastrError("Title is required", "Submission Failed");
+        error = true;
+    } 
+    
+    if (!validateInput(title)) {
+        props.toastrError("Title already exists", "Submission Failed");
+        error = true;
+    }
+    
+    if (!deadline) {
+        props.toastrError("Deadline is required", "Submission Failed");
+        error = true;
+    }
+    
+    if (!priority) {
+        props.toastrError("Priority is required", "Submission Failed");
+    } 
+    
+    if (!error && deadline && priority) {
         const newTask: Task = {
             title: title,
             description: description,
@@ -53,6 +65,7 @@ export function AddDialog(props: AddDialogProps) {
           };
       
           props.add(newTask);
+          props.toastrSuccess(`successfully added "${title}"`, "Add Success");
     }
   }
 

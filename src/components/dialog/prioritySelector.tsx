@@ -16,12 +16,11 @@ export default function PrioritySelector(props: PrioritySelectorProps) {
       <FormLabel id="priority-radio-buttons">Task Priority</FormLabel>
       <RadioGroup
         onChange={props.onChange}
-        defaultValue="low"
         name="priority-radio-buttons"
       >
-        <FormControlLabel value="high" control={<Radio />} label="High" />
-        <FormControlLabel value="med" control={<Radio />} label="Medium" />
-        <FormControlLabel value="low" control={<Radio />} label="Low" />
+        <FormControlLabel value="HIGH" control={<Radio />} label="High" />
+        <FormControlLabel value="MEDIUM" control={<Radio />} label="Medium" />
+        <FormControlLabel value="LOW" control={<Radio />} label="Low" />
       </RadioGroup>
     </FormControl>
   );

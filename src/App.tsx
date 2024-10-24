@@ -7,6 +7,17 @@ import { AddDialog } from './components/dialog/addDialog.tsx';
 import { UpdateDialog } from './components/dialog/updateDialog.tsx';
 import React from 'react';
 
+toastr.options = {
+  "positionClass": "toast-bottom-right",
+  "closeButton": true,
+  "debug": false,
+  "newestOnTop": true,
+  "progressBar": true,
+  "preventDuplicates": true, 
+  "showEasing": "swing",
+  "hideEasing": "linear",
+};
+
 function App() {
   const [updateTaskTitle, setUpdateTaskTitle] = React.useState<string>('');
   const [updateOpen, setUpdateOpen] = React.useState<boolean>(false);
@@ -25,6 +36,7 @@ function App() {
     const updatedTasks = new Map(tasks);
     updatedTasks.delete(title);
     setTasks(updatedTasks);
+    toastr.info(`task "${title}" deleted successfully`);
 };
 
   const openUpdateDialog = (title: string) => {

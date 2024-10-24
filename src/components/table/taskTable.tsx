@@ -12,7 +12,6 @@ import TaskTableLabels from './taskTableLabels';
 import TaskCells from './taskCells';
 import React from 'react';
 
-
 export const WHITE = '#FFFFFF';
 export const GREY = '#F0F0F0';
 export const PRIMARY = '#1976d2';
