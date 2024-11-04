@@ -53,7 +53,9 @@ export function UpdateDialog(props: EditDialogProps) {
       };
 
       props.update(newTask);
-      props.onClose();
+      setDescription('');
+      setDeadline(null);
+      setPriority(null);
       props.toastrSuccess(`successfully updated "${props.title}"`, "Update Success");
     }
 

@@ -6,10 +6,8 @@ export interface CompletedMarkerProps {
 }
 
 export default function CompletedMarker(props: CompletedMarkerProps) {
-  // Create state to track the checkbox status
   const [checked, setChecked] = useState(false);
 
-  // Handle change when the checkbox is clicked
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
     props.onChange(checked);
@@ -19,11 +17,11 @@ export default function CompletedMarker(props: CompletedMarkerProps) {
     <FormControlLabel
       control={
         <Checkbox
-          checked={checked} // Bind the state to the checkbox
-          onChange={handleChange} // Update state when the checkbox changes
+          checked={checked}
+          onChange={handleChange}
         />
       }
-      label={checked ? "Complete!" : "In Progress"} // Optional label to display the checkbox status
+      label={checked ? "Complete!" : "In Progress"}
     />
   );
 }

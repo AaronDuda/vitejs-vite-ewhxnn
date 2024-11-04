@@ -31,7 +31,7 @@ export function AddDialog(props: AddDialogProps) {
   };
 
   const handleDeadlineChange = (newDeadline: dayjs.Dayjs | null) => {
-    setDeadline(newDeadline)
+    setDeadline(newDeadline);
   };
 
   const handleSubmit = () => {
@@ -65,6 +65,10 @@ export function AddDialog(props: AddDialogProps) {
           };
       
           props.add(newTask);
+          setTitle('');
+          setDescription('');
+          setDeadline(null);
+          setPriority(null);
           props.toastrSuccess(`successfully added "${title}"`, "Add Success");
     }
   }
